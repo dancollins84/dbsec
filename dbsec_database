@@ -1,0 +1,103 @@
+SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
+SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
+SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL,ALLOW_INVALID_DATES';
+
+CREATE SCHEMA IF NOT EXISTS `#REPLACE_ME#` DEFAULT CHARACTER SET utf8 ;
+USE `#REPLACE_ME#` ;
+
+-- -----------------------------------------------------
+-- Table `#REPLACE_ME#`.`hosts`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `#REPLACE_ME#`.`hosts` ;
+
+CREATE TABLE IF NOT EXISTS `#REPLACE_ME#`.`hosts` (
+  `host_ip` VARCHAR(15) NOT NULL,
+  `host_name` VARCHAR(45) NULL,
+  `host_os` VARCHAR(100) NULL,
+  `mac_address` VARCHAR(20) NULL,
+  PRIMARY KEY (`host_ip`))
+ENGINE = InnoDB
+COMMENT = 'Host data table.';
+
+
+-- -----------------------------------------------------
+-- Table `#REPLACE_ME#`.`discovery`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `#REPLACE_ME#`.`discovery` ;
+
+CREATE TABLE IF NOT EXISTS `#REPLACE_ME#`.`discovery` (
+  `disc_id` INT NOT NULL AUTO_INCREMENT,
+  `host_ip` VARCHAR(15) NOT NULL COMMENT '	',
+  `port_num` VARCHAR(5) NOT NULL,
+  `protocol` VARCHAR(3) NOT NULL,
+  `service` VARCHAR(20) NOT NULL,
+  `port_state` VARCHAR(10) NOT NULL,
+  PRIMARY KEY (`disc_id`))
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `#REPLACE_ME#`.`software`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `#REPLACE_ME#`.`software` ;
+
+CREATE TABLE IF NOT EXISTS `#REPLACE_ME#`.`software` (
+  `software_id` INT NOT NULL,
+  `host_ip` VARCHAR(15) NOT NULL,
+  `part` VARCHAR(2) NULL,
+  `vendor` VARCHAR(45) NULL,
+  `product` VARCHAR(45) NULL,
+  `version` MEDIUMTEXT NULL,
+  PRIMARY KEY (`software_id`),
+  INDEX `fk_software_hosts_idx` (`host_ip` ASC),
+  CONSTRAINT `fk_software_hosts`
+    FOREIGN KEY (`host_ip`)
+    REFERENCES `#REPLACE_ME#`.`hosts` (`host_ip`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB
+COMMENT = 'A listing of all instances of outdated third party software, to include version numbers and the source of the information.';
+
+
+-- -----------------------------------------------------
+-- Table `#REPLACE_ME#`.`vulnerabilities`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `#REPLACE_ME#`.`vulnerabilities` ;
+
+CREATE TABLE IF NOT EXISTS `#REPLACE_ME#`.`vulnerabilities` (
+  `vuln_id` INT NOT NULL AUTO_INCREMENT,
+  `host_ip` VARCHAR(15) NOT NULL,
+  `severity` INT NULL,
+  `vuln_name` MEDIUMTEXT NULL,
+  `desc` MEDIUMTEXT NULL,
+  `plugin` VARCHAR(6) NOT NULL,
+  `plugin_family` VARCHAR(45) NULL,
+  `cvss_base` FLOAT NULL,
+  `cvss_temp` FLOAT NULL,
+  `exploitable` VARCHAR(10) NULL,
+  PRIMARY KEY (`vuln_id`),
+  INDEX `fk_vulnerabilities_hosts_idx` (`host_ip` ASC),
+  CONSTRAINT `fk_vulnerabilities_hosts`
+    FOREIGN KEY (`host_ip`)
+    REFERENCES `#REPLACE_ME#`.`hosts` (`host_ip`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `#REPLACE_ME#`.`cve`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `#REPLACE_ME#`.`cve` ;
+
+CREATE TABLE IF NOT EXISTS `#REPLACE_ME#`.`cve` (
+  `cve_id` INT NOT NULL,
+  `plugin` VARCHAR(6) NOT NULL,
+  `cve_num` VARCHAR(15) NOT NULL,
+  PRIMARY KEY (`cve_id`))
+ENGINE = InnoDB;
+
+
+SET SQL_MODE=@OLD_SQL_MODE;
+SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
+SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;

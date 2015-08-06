@@ -3,23 +3,23 @@
 
 USE #REPLACE_ME#;
 
-LOAD XML LOCAL INFILE 'path/to/all_tables.xml'
+LOAD XML LOCAL INFILE '#REPLACE_LOC#'
 INTO TABLE discovery
 ROWS IDENTIFIED BY '<disc_host>';
 
-LOAD XML LOCAL INFILE 'path/to/all_tables.xml'
+LOAD XML LOCAL INFILE '#REPLACE_LOC#'
 INTO TABLE hosts
 ROWS IDENTIFIED BY '<host>';
 
-LOAD XML LOCAL INFILE 'path/to/all_tables.xml'
+LOAD XML LOCAL INFILE '#REPLACE_LOC#'
 INTO TABLE software
 ROWS IDENTIFIED BY '<cpe>';
 
-LOAD XML LOCAL INFILE 'path/to/all_tables.xml'
+LOAD XML LOCAL INFILE '#REPLACE_LOC#'
 INTO TABLE vulnerabilities
 ROWS IDENTIFIED BY '<vulnerability>';
 
-LOAD XML LOCAL INFILE 'path/to/all_tables.xml'
+LOAD XML LOCAL INFILE '#REPLACE_LOC#'
 INTO TABLE cve
 ROWS IDENTIFIED BY '<cve>';
 
